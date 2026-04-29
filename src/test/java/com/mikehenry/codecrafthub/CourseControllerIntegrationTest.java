@@ -1,16 +1,15 @@
 package com.mikehenry.codecrafthub;
 
+import java.time.LocalDate;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mikehenry.codecrafthub.dto.CourseRequestDTO;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.time.LocalDate;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -25,12 +24,8 @@ class CourseControllerIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
-
-    @BeforeEach
-    void setup() throws Exception {
-        // Optionally clear courses.json or reset state if needed
-    }
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Test
     void testAddAndGetCourse() throws Exception {
@@ -88,7 +83,7 @@ class CourseControllerIntegrationTest {
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())
                 .andReturn().getResponse().getContentAsString();
-        Long id = objectMapper.readTree(response).get("id").asLong();
+        long id = objectMapper.readTree(response).get("id").asLong();
 
         // Update
         request.setStatus("Completed");

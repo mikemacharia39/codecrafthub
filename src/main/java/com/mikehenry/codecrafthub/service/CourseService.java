@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mikehenry.codecrafthub.dto.CourseRequestDTO;
 import com.mikehenry.codecrafthub.dto.CourseResponseDTO;
+import com.mikehenry.codecrafthub.dto.CourseStatsDTO;
 import com.mikehenry.codecrafthub.enums.CourseStatus;
 import com.mikehenry.codecrafthub.model.Course;
 import lombok.RequiredArgsConstructor;
@@ -45,6 +46,21 @@ public class CourseService {
      */
     public List<CourseResponseDTO> getAllCourses() {
         return courses.stream().map(this::toResponseDTO).toList();
+    }
+
+    /**
+     * Returns aggregate statistics about courses.
+     *
+     * <p>Counts the total number of courses and breaks them down by each
+     * {@link CourseStatus} value.
+     *
+     * @return a {@link CourseStatsDTO} with total count and per-status counts
+     */
+    public CourseStatsDTO getStats() {
+        long notStarted = courses.stream().filter(c -> CourseStatus.NOT_STARTED.getValue().equals(c.getStatus())).count();
+        long inProgress = courses.stream().filter(c -> CourseStatus.IN_PROGRESS.getValue().equals(c.getStatus())).count();
+        long completed  = courses.stream().filter(c -> CourseStatus.COMPLETED.getValue().equals(c.getStatus())).count();
+        return new CourseStatsDTO(courses.size(), new CourseStatsDTO.StatusBreakdown(notStarted, inProgress, completed));
     }
 
     /**

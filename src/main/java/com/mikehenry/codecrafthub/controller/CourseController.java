@@ -4,6 +4,7 @@ import com.mikehenry.codecrafthub.dto.CourseRequestDTO;
 import com.mikehenry.codecrafthub.dto.CourseResponseDTO;
 import com.mikehenry.codecrafthub.service.CourseService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,13 +15,10 @@ import java.util.List;
  * REST controller for managing courses.
  */
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/courses")
 public class CourseController {
     private final CourseService courseService;
-
-    public CourseController(CourseService courseService) {
-        this.courseService = courseService;
-    }
 
     /**
      * Add a new course.
